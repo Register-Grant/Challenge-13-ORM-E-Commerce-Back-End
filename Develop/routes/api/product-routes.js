@@ -7,27 +7,56 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // get all products
 router.get('/', async (req, res) => {
   // find all products
-  const productData = await Product.findAll({
+  try {
+    const productData = await Product.findAll({
 
-  // be sure to include its associated Category and Tag data
-  include: [
-    {model: Category,
-    as: 'category'},
-    {model: Tag,
-    as: 'tag'}
-  ]
-})
-  return response.json(productData)
+      // be sure to include its associated Category and Tag data
+      include: [
+        {
+          model: Category,
+          as: 'category'
+        },
+        {
+          model: Tag,
+          as: 'tag'
+        }
+      ]
+    })
+    res.status(200).json(productData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // get one product
 router.get('/:id', async (req, res) => {
   // find a single product by its `id`
-  // be sure to include its associated Category and Tag data
+  try {
+    const productId = await Product.findByPk({
+      // be sure to include its associated Category and Tag data
+      include: [
+        {
+          model: Category,
+          as: 'category'
+        },
+        {
+          model: Tag,
+          as: 'tag'
+        }
+      ]
+    });
+    if (!productId) {
+      res.status(404).json({ message: 'Move along - nothing to see here' });
+      return;
+    }
+    res.status(200).json(productId)
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // create new product
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -36,6 +65,16 @@ router.post('/', (req, res) => {
       tagIds: [1, 2, 3, 4]
     }
   */
+
+  router.post('/', async (req, res) => {
+    try {
+      const locationData = await Location.create(req.body);
+      res.status(200).json(locationData);
+    } catch (err) {
+      res.status(400).json(err);
+    }
+  });
+
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
