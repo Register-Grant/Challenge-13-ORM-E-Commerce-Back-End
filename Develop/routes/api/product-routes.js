@@ -56,7 +56,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // create new product
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
 
   /* req.body should look like this...
     {
@@ -91,7 +91,7 @@ router.post('/', (req, res) => {
 
 
 // update product
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update product data
   Product.update(req.body, {
     where: {
@@ -132,7 +132,7 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
     try {
         const destroyProduct = await Product.destroy({
@@ -140,7 +140,7 @@ router.delete('/:id', async(req, res) => {
                 id: req.params.id,
             },
         });
-        if (!deleteProduct) {
+        if (!destroyProduct) {
             res.status(404).json({ message: "No product found with that id!" });
             return;
         }
