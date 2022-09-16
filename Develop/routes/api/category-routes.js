@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
 // Update a specific category from its ID
 router.put("/:id", async (req, res) => {
   try {
-    const updateCategoryById = await Category.update(
+    const updateCategory = await Category.update(
       {
         category_name: req.body.category_name,
       },
@@ -65,11 +65,11 @@ router.put("/:id", async (req, res) => {
         },
       }
     );
-    if (!updateCategoryById) {
+    if (!updateCategory) {
       res.status(404).json({ message: "That category doesn't exist, nerd" });
       return;
     }
-    res.status(200).json(updateCategoryById);
+    res.status(200).json(updateCategory);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -78,16 +78,16 @@ router.put("/:id", async (req, res) => {
 // Delete a specific category from its ID
 router.delete("/:id", async (req, res) => {
   try {
-    const destroyCategoryById = await Category.destroy({
+    const deleteCategory = await Category.destroy({
       where: {
         id: req.params.id,
       },
     });
-    if (!destroyCategoryById) {
+    if (!deleteCategory) {
       res.status(404).json({ message: "That category still doesn't exist, nerd" });
       return;
     }
-    res.status(200).json(destroyCategoryById);
+    res.status(200).json(deleteCategory);
   } catch (err) {
     res.status(500).json(err);
   }
